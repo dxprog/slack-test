@@ -1,6 +1,31 @@
+/* Itty bitty reset */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* We'll support up to four columns */
 #content {
-  max-width: 1280px;
+  max-width: 250px;
   margin: 0 auto;
+}
+
+@media (min-width: 540px) {
+  #content {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 810px) {
+  #content {
+    max-width: 810px;
+  }
+}
+
+@media (min-width: 1080px) {
+  #content {
+    max-width: 1080px;
+  }
 }
 
 #images {
