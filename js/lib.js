@@ -94,11 +94,24 @@ window.ajax = function(url, isJSON) {
 window.require = (function() {
   var codeCache = {};
 
-  return function(scripts, cb) {
+  return function require(scripts, cb) {
     scripts = Array.isArray(scripts) ? scripts : [ scripts ];
 
     var promises = 0;
     var loadedScripts = {};
+
+    var checkLoadedScripts = function() {
+      if (promises <= 0) {
+        var includes = [];
+        // Put the includes in the proper order
+        for (var i = 0, count = scripts.length; i < count; i++) {
+          includes.push(loadedScripts[scripts[i]]);
+        }
+
+        cb.apply(null, includes);
+      }
+    };
+
     var scriptLoaded = function(script, code) {
       // My gut says eval is evil, but this is code that was included
       // to be executed anyways. The extra code does have the upside of:
@@ -109,15 +122,7 @@ window.require = (function() {
       loadedScripts[script] = codeCache[script];
 
       promises--;
-      if (promises <= 0) {
-        var includes = [];
-        // Put the includes in the proper order
-        for (var i = 0, count = scripts.length; i < count; i++) {
-          includes.push(loadedScripts[scripts[i]]);
-        }
-
-        cb.apply(null, includes);
-      }
+      checkLoadedScripts();
     };
 
     var script;
@@ -134,7 +139,11 @@ window.require = (function() {
             throw new Error('Unable to load script: ' + script);
           });
         }(script));
+      } else {
+        loadedScripts[script] = codeCache[script];
       }
     }
+
+    checkLoadedScripts();
   };
 }());
