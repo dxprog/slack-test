@@ -1,1 +1,38 @@
-/* Styles */
+#content {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+#images {
+  overflow: hidden;
+}
+
+/* When mousing over images, dim all but the one under the cursor */
+#images:hover .image-cell {
+  opacity: 0.5;
+}
+
+#images:hover .image-cell:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.image-cell {
+  float: left;
+  width: 250px;
+  height: 250px;
+  margin: 10px;
+  background-size: cover;
+  position: relative;
+}
+
+/* The img element is primarily there so that users
+   can have a contextually correct right-click menu */
+.image-cell img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+}
