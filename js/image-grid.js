@@ -50,13 +50,6 @@ ImageGrid.prototype = {
 
       self.cells = newCells;
     });
-  },
-
-  empty: function empty() {
-    var el = this.el;
-    while (el.firstChild) {
-      el.removeChild(el.firstChild);
-    }
   }
 };
 
