@@ -50,6 +50,40 @@ window.Promise = (function(undefined) {
 
 }());
 
+/**
+ * Simple ajax wrapper for GET'ing JSON data
+ *
+ * @param {String} url The URL to fetch
+ * @return {Promise} Promise that resolves to object
+ */
+window.ajax = function(url) {
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          try {
+            var data = JSON.parse(xhr.responseText);
+            resolve(data);
+          } catch (exc) {
+            reject(exc);
+          }
+        } else {
+          reject(xhr);
+        }
+      }
+    };
+
+    xhr.onerror = function() {
+      reject(xhr);
+    };
+
+    xhr.open('GET', url, true);
+    xhr.send();
+  });
+};
+
 // A hackey implementation of require
 window.require = (function() {
 
