@@ -58,7 +58,7 @@ window.Promise = (function(undefined) {
  * @return {Promise} Promise that resolves to parsed response
  */
 window.ajax = function(url, isJSON) {
-  isJSON = !!isJSON;
+  isJSON = typeof isJSON === 'undefined' ? true : isJSON;
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
 
