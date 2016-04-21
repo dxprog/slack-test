@@ -29,6 +29,6 @@ Dropdown.prototype = {
     callbacks.push(cb);
     this.eventMap[event] = callbacks;
   }
-}
+};
 
 module.exports = Dropdown;
