@@ -54,11 +54,12 @@ window.Promise = (function(undefined) {
  * Simple ajax wrapper for GET'ing stuff
  *
  * @param {String} url The URL to fetch
- * @param {Boolean} isJSON Whether to parse the response as JSON. Default: true
+ * @param {String} type The type of request. Supported: json (default), jsonp, plain
+ * @param {String} jsonpCallback The name of the jsonpCallback
  * @return {Promise} Promise that resolves to parsed response
  */
-window.ajax = function(url, isJSON) {
-  isJSON = typeof isJSON === 'undefined' ? true : isJSON;
+window.ajax = function(url, type, jsonpCallback) {
+  type = typeof type === 'undefined' ? 'json' : type;
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
 
@@ -66,13 +67,22 @@ window.ajax = function(url, isJSON) {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           var data = xhr.responseText;
-          if (isJSON) {
-            try {
-              data = JSON.parse(xhr.responseText);
-            } catch (exc) {
-              reject(exc);
-              return;
-            }
+          switch (type) {
+            case 'json':
+              try {
+                data = JSON.parse(data);
+              } catch (exc) {
+                reject(exc);
+                return;
+              }
+              break;
+            case 'xml':
+              data = xhr.responseXML;
+              break;
+            case 'jsonp':
+              data = eval(data);
+              delete window[jsonpCallback];
+              break;
           }
           resolve(data);
         } else {
@@ -84,6 +94,14 @@ window.ajax = function(url, isJSON) {
     xhr.onerror = function() {
       reject(xhr);
     };
+
+    if (type === 'jsonp') {
+      jsonpCallback = jsonpCallback || 'jsonpCallback' + Date.now();
+      url += (url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + jsonpCallback;
+      window[jsonpCallback] = function(data) {
+        return data;
+      };
+    }
 
     xhr.open('GET', url, true);
     xhr.send();
@@ -133,7 +151,7 @@ window.require = (function() {
       if (!codeCache[script]) {
         (function(script) {
           promises++;
-          ajax(script, false).then(function(code) {
+          ajax(script, 'plain').then(function(code) {
             scriptLoaded(script, code);
           }, function(xhr) {
             throw new Error('Unable to load script: ' + script);
