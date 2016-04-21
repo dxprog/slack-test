@@ -165,3 +165,24 @@ window.require = (function() {
     checkLoadedScripts();
   };
 }());
+
+// Even cheaper event thingy
+window.mixinEvents = function(fn) {
+  fn.prototype.on = function(event, cb) {
+    if (typeof cb !== 'function') {
+      throw new Error('callback must be a function');
+    }
+    // Initialize in case it hasn't already happened
+    this._events = this._events || {};
+    this._events[event] = this._events[event] || [];
+    this._events[event].push(cb);
+  };
+
+  fn.prototype.fire = function(event, data) {
+    if (this._events[event]) {
+      for (var i = 0, count = this._events[event].length; i < count; i++) {
+        this._events[event][i](data);
+      }
+    }
+  }
+};
