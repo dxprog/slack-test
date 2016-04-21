@@ -1,7 +1,8 @@
 // App code
-require([ './js/image-grid.js', './js/dropdown.js' ], function(ImageGrid, Dropdown) {
+require([ './js/image-grid.js', './js/dropdown.js', './js/lightbox.js' ], function(ImageGrid, Dropdown, Lightbox) {
   var imageGrid = new ImageGrid(document.getElementById('images'));
   var dropdown = new Dropdown(document.getElementById('sources'));
+  var lightbox = new Lightbox(document.getElementById('lightbox'));
   var images = [];
 
   // Loads images from the specified provider. Arguably, not
@@ -12,6 +13,7 @@ require([ './js/image-grid.js', './js/dropdown.js' ], function(ImageGrid, Dropdo
       require('./js/service-connectors/' + provider + '.js', function(provider) {
         provider().then(function(data) {
           images = data;
+          lightbox.setData(data);
           imageGrid.render(images);
         });
       });
@@ -19,7 +21,7 @@ require([ './js/image-grid.js', './js/dropdown.js' ], function(ImageGrid, Dropdo
   }
 
   imageGrid.on('image-click', function(index) {
-    console.log(images[index]);
+    lightbox.show(index);
   });
 
   dropdown.on('change', function(value) {
