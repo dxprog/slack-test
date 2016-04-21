@@ -10,6 +10,14 @@ function ImageGrid(el) {
 ImageGrid.prototype = {
   init: function init() {
     this.el.classList.add('image-container');
+    this.el.addEventListener('click', this.onClick.bind(this));
+  },
+
+  onClick: function onClick(evt) {
+    if (evt.target.tagName === 'IMG') {
+      var parent = evt.target.parentNode;
+      this.fire('image-click', parent.dataset.index);
+    }
   },
 
   render: function render(data) {
@@ -23,13 +31,13 @@ ImageGrid.prototype = {
         // Try to reuse cells where possible
         cell = self.cells.shift() || new ImageCell(el);
         cell.render(data[i]);
+        cell.el.dataset.index = i;
         newCells.push(cell);
       }
 
       // Scrub any remaining old cells off the grid
       var remainingCells = self.cells.splice(i);
       while (!!remainingCells.length) {
-        console.log('throwing away cell');
         cell = self.cells.shift();
         el.removeChild(cell.el);
       }
@@ -38,5 +46,7 @@ ImageGrid.prototype = {
     });
   }
 };
+
+mixinEvents(ImageGrid);
 
 module.exports = ImageGrid;

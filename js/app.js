@@ -2,6 +2,7 @@
 require([ './js/image-grid.js', './js/dropdown.js' ], function(ImageGrid, Dropdown) {
   var imageGrid = new ImageGrid(document.getElementById('images'));
   var dropdown = new Dropdown(document.getElementById('sources'));
+  var images = [];
 
   // Loads images from the specified provider. Arguably, not
   // terribly secure at all...
@@ -10,14 +11,20 @@ require([ './js/image-grid.js', './js/dropdown.js' ], function(ImageGrid, Dropdo
       // Temporarily grab images from redditbooru
       require('./js/service-connectors/' + provider + '.js', function(provider) {
         provider().then(function(data) {
-          imageGrid.render(data);
+          images = data;
+          imageGrid.render(images);
         });
       });
     });
   }
 
-  loadImageSource('redditbooru');
+  imageGrid.on('image-click', function(index) {
+    console.log(images[index]);
+  });
+
   dropdown.on('change', function(value) {
     loadImageSource(value);
   });
+
+  loadImageSource('redditbooru');
 });
