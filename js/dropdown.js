@@ -9,12 +9,14 @@ function Dropdown(el) {
     throw new Error('Dropdown requires a <select> element');
   }
   this.el = el;
-  this.el.addEventListener('change', this.onSelect.bind(this));
+  this.el.addEventListener('change', this._onSelect.bind(this));
 }
 
 Dropdown.prototype = {
   /**
    * Handler for select's "onchange" event. Fires the event out.
+   *
+   * @private
    */
   _onSelect: function onSelect(evt) {
     this.fire('change', this.el.value);

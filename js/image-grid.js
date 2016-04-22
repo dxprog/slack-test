@@ -1,5 +1,11 @@
 var CLICK = 'ontouchend' in window ? 'touchend' : 'click';
 
+/**
+ * Component to manage a grid of images.
+ *
+ * @constructor
+ * @param {HTMLElement} el The element that will contain the grid
+ */
 function ImageGrid(el) {
   if (!(el instanceof HTMLElement)) {
     throw new Error('el must be an element');
@@ -10,11 +16,19 @@ function ImageGrid(el) {
 };
 
 ImageGrid.prototype = {
+  /**
+   * Initializes grid stuff
+   */
   init: function init() {
     this.el.classList.add('image-container');
     this.el.addEventListener(CLICK, this.onClick.bind(this));
   },
 
+  /**
+   * Global click handler for delegated cell clicks
+   *
+   * @private
+   */
   onClick: function onClick(evt) {
     if (evt.target.tagName === 'IMG') {
       var parent = evt.target.parentNode;
@@ -22,6 +36,12 @@ ImageGrid.prototype = {
     }
   },
 
+  /**
+   * Renders the passed array of data to the grid
+   *
+   * @method render
+   * @param {Array} data Array of objects to be rendered.
+   */
   render: function render(data) {
     // TODO - make this less ugly somehow...
     var self = this;
