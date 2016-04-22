@@ -1,3 +1,5 @@
+var CLICK = 'ontouchend' in window ? 'touchend' : 'click';
+
 function ImageGrid(el) {
   if (!(el instanceof HTMLElement)) {
     throw new Error('el must be an element');
@@ -10,13 +12,13 @@ function ImageGrid(el) {
 ImageGrid.prototype = {
   init: function init() {
     this.el.classList.add('image-container');
-    this.el.addEventListener('click', this.onClick.bind(this));
+    this.el.addEventListener(CLICK, this.onClick.bind(this));
   },
 
   onClick: function onClick(evt) {
     if (evt.target.tagName === 'IMG') {
       var parent = evt.target.parentNode;
-      this.fire('image-click', parseInt(parent.dataset.index));
+      this.fire('image-click', parseInt(parent.getAttribute('data-index')));
     }
   },
 
@@ -31,7 +33,7 @@ ImageGrid.prototype = {
         // Try to reuse cells where possible
         cell = self.cells.shift() || new ImageCell(el);
         cell.render(data[i]);
-        cell.el.dataset.index = i;
+        cell.el.setAttribute('data-index', i);
         newCells.push(cell);
       }
 

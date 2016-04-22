@@ -161,6 +161,10 @@ nav option {
   background: rgba(0, 0, 0, 0.7);
 }
 
+#lightbox.fadeout {
+  opacity: 0;
+}
+
 #lightbox .modal {
   position: absolute;
   left: 50%;
@@ -192,8 +196,9 @@ nav option {
 }
 
 #lightbox button {
+  font: 2rem/1 sans-serif;
   position: absolute;
-  padding: 10px;
+  padding: 20px;
   top: 50%;
   transform: translateY(-50%);
   background: #fff;
@@ -209,6 +214,10 @@ nav option {
 #lightbox button:hover {
   opacity: 1 !important;
   cursor: pointer;
+}
+
+#lightbox button:disabled {
+  display: none;
 }
 
 #lightbox button.back {
@@ -230,5 +239,40 @@ nav option {
 @media (max-width: 375px) {
   html {
     font-size: 50%;
+  }
+}
+
+@media (max-width: 640px) {
+  #lightbox .modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    transform: none;
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #lightbox button {
+    padding: 10px;
+    font-size: 1.8rem;
+    top: 15px;
+    transform: none;
+    opacity: 1 !important;
+  }
+
+  #lightbox button.close {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  #lightbox .modal img {
+    justify-content: center;
+    align-content: center;
   }
 }
