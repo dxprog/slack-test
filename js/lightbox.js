@@ -23,6 +23,8 @@ Lightbox.prototype = {
     modalEl.appendChild(this.backButtonEl);
     this.nextButtonEl = this._createButton('Next', 'next', this._onNextClick);
     modalEl.appendChild(this.nextButtonEl);
+    this.closeButtonEl = this._createButton('Close', 'close', this._onCloseClick);
+    modalEl.appendChild(this.closeButtonEl);
 
     this.el.appendChild(modalEl);
   },
@@ -57,14 +59,18 @@ Lightbox.prototype = {
     });
   },
 
-  _onNextClick: function(evt) {
+  _onNextClick: function _onBackClick(evt) {
     this.index += this.index + 1 < this.data.length ? 1 : 0;
     this.show();
   },
 
-  _onBackClick: function(evt) {
+  _onBackClick: function _onBackClick(evt) {
     this.index -= this.index - 1 >= 0 ? 1 : 0;
     this.show();
+  },
+
+  _onCloseClick: function _onCloseClick(evt) {
+    this.hide();
   },
 
   resizeLightbox: function resizeLightbox(img) {
