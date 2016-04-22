@@ -16,6 +16,7 @@ Verifying that my project meets the specs that were sent to me:
  - Firefox 43
  - Edge
  - iPhone 5S running iOS9
+ - Safari 9
 
 #Approach
 
