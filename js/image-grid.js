@@ -40,7 +40,9 @@ ImageGrid.prototype = {
    * Renders the passed array of data to the grid
    *
    * @method render
-   * @param {Array} data Array of objects to be rendered.
+   * @param {Object[]} data An array of image objects
+   * @param {String} data[].src The URL to the image
+   * @param {String} data[].title The title of the image
    */
   render: function render(data) {
     // TODO - make this less ugly somehow...

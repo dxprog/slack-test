@@ -1,6 +1,12 @@
 'use strict';
 
-// A hacky promise type thing
+/**
+ * A simple Promise implementation
+ *
+ * @method Promise
+ * @param {Function} fn A function with two callbacks as parameters for success and failure
+ * @return {Object} An object with a one-time-use "then" method
+ */
 window.Promise = (function(undefined) {
 
   var NOOP = function(){};
@@ -108,7 +114,13 @@ window.ajax = function(url, type, jsonpCallback) {
   });
 };
 
-// A hackey implementation of require
+/**
+ * A require type wrapper
+ *
+ * @method require
+ * @param {String|Array} scripts A script or array of scripts to load
+ * @param {Function} cb A callback that's called with the required scripts as parameters in the order specified in the array
+ */
 window.require = (function() {
   var codeCache = {};
 
@@ -166,7 +178,12 @@ window.require = (function() {
   };
 }());
 
-// Even cheaper event thingy
+/**
+ * Adds on/fire methods for event handling to a constructor
+ *
+ * @method mixinEvents
+ * @param {Function} fn The function to add the methods to
+ */
 window.mixinEvents = function(fn) {
   fn.prototype.on = function(event, cb) {
     if (typeof cb !== 'function') {

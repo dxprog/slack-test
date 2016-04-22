@@ -28,5 +28,5 @@ require([ './js/image-grid.js', './js/dropdown.js', './js/lightbox.js' ], functi
     loadImageSource(value);
   });
 
-  loadImageSource('redditbooru');
+  loadImageSource(dropdown.getValue());
 });
