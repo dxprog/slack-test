@@ -36,10 +36,10 @@ ImageGrid.prototype = {
       }
 
       // Scrub any remaining old cells off the grid
-      var remainingCells = self.cells.splice(i);
+      var remainingCells = self.cells;
       while (!!remainingCells.length) {
-        cell = self.cells.shift();
-        el.removeChild(cell.el);
+        cell = remainingCells.shift();
+        cell.el.parentNode.removeChild(cell.el);
       }
 
       self.cells = newCells;
