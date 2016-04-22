@@ -16,7 +16,7 @@ ImageGrid.prototype = {
   onClick: function onClick(evt) {
     if (evt.target.tagName === 'IMG') {
       var parent = evt.target.parentNode;
-      this.fire('image-click', parent.dataset.index);
+      this.fire('image-click', parseInt(parent.dataset.index));
     }
   },
 

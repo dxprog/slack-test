@@ -1,4 +1,5 @@
 var VISIBLE = 'visible';
+var MODAL_PADDING = 80;
 
 function Lightbox(el, data) {
   this.el = el;
@@ -12,18 +13,15 @@ Lightbox.prototype = {
     var modalEl = this.modalEl = document.createElement('div');
     modalEl.className = 'modal';
 
-    var imageContainerEl = this.imageContainerEl = document.createElement('div');
-    imageContainerEl.className = 'image-container';
     this.imageEl = document.createElement('img');
-    imageContainerEl.appendChild(this.imageEl);
-    modalEl.appendChild(imageContainerEl);
+    modalEl.appendChild(this.imageEl);
 
     this.titleEl = document.createElement('h2');
     modalEl.appendChild(this.titleEl);
 
-    this.prevButtonEl = document.createElement('button');
-    modalEl.appendChild(this.prevButtonEl);
-    this.nextButtonEl = document.createElement('button');
+    this.backButtonEl = this._createButton('Back', 'back', this._onBackClick);
+    modalEl.appendChild(this.backButtonEl);
+    this.nextButtonEl = this._createButton('Next', 'next', this._onNextClick);
     modalEl.appendChild(this.nextButtonEl);
 
     this.el.appendChild(modalEl);
@@ -34,14 +32,75 @@ Lightbox.prototype = {
     this.index = 0;
   },
 
+  _createButton: function _createButton(title, className, cb) {
+    var button = document.createElement('button');
+    button.className = className;
+    button.textContent = title;
+    if (cb) {
+      button.addEventListener('click', cb.bind(this));
+    }
+    return button;
+  },
+
+  _loadImage: function(src) {
+    return new Promise(function(resolve, reject) {
+      var img = new Image();
+      img.onload = function() {
+        resolve(img);
+      };
+
+      img.onerror = function() {
+        reject();
+      }
+
+      img.src = src;
+    });
+  },
+
+  _onNextClick: function(evt) {
+    this.index += this.index + 1 < this.data.length ? 1 : 0;
+    this.show();
+  },
+
+  _onBackClick: function(evt) {
+    this.index -= this.index - 1 >= 0 ? 1 : 0;
+    this.show();
+  },
+
+  resizeLightbox: function resizeLightbox(img) {
+    img = img || this.imageEl;
+    var winWidth = window.innerWidth - MODAL_PADDING;
+    var winHeight = window.innerHeight - MODAL_PADDING;
+    var imgWidth = img.naturalWidth;
+    var imgHeight = img.naturalHeight;
+
+    // Resize if needed
+    if (imgWidth > winWidth || imgHeight > winHeight) {
+      if (imgWidth > imgHeight) {
+        imgHeight = Math.round(winWidth * (imgHeight / imgWidth));
+        imgWidth = winWidth;
+      } else {
+        imgWidth = Math.round(winHeight * (imgWidth / imgHeight));
+        imgHeight = winHeight;
+      }
+    }
+
+    this.modalEl.style.width = imgWidth + 'px';
+    this.modalEl.style.height = imgHeight + 'px';
+  },
+
   show: function show(index) {
-    var image = this.data[index];
+    var self = this;
+    index = index || self.index;
+    var image = self.data[index];
     if (image) {
-      index = index || this.index;
-      this.el.classList.add(VISIBLE);
-      this.imageContainerEl.style.backgroundImage = 'url(' + image.src + ')';
-      this.imageEl.src = image.src;
-      this.titleEl.textContent = image.title;
+      self._loadImage(image.src).then(function(img) {
+        self.el.classList.add(VISIBLE);
+        self.resizeLightbox(img);
+        self.imageEl.src = image.src;
+        self.titleEl.textContent = image.title;
+        self.index = index;
+      });
     }
   },
 
