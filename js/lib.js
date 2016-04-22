@@ -34,7 +34,7 @@ window.Promise = (function(undefined) {
     return {
       then: function(success, failure) {
         self.success = success;
-        self.failure = failure;
+        self.failure = failure || NOOP;
 
         // If the code has somehow already executed, invoke the correct method
         if (self.state === ST_RESOLVED) {
