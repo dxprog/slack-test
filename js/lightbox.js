@@ -74,15 +74,25 @@ Lightbox.prototype = {
     var imgWidth = img.naturalWidth;
     var imgHeight = img.naturalHeight;
 
-    // Resize if needed
+    // Resize
     if (imgWidth > winWidth || imgHeight > winHeight) {
       if (imgWidth > imgHeight) {
-        imgHeight = Math.round(winWidth * (imgHeight / imgWidth));
+        imgHeight = Math.round(imgHeight / imgWidth * winWidth);
         imgWidth = winWidth;
       } else {
-        imgWidth = Math.round(winHeight * (imgWidth / imgHeight));
+        imgWidth = Math.round(imgWidth / imgHeight * winHeight);
         imgHeight = winHeight;
       }
+
+      // If still too large, resize using the other axis as the clamp
+      if (imgWidth > winWidth) {
+        imgHeight = Math.round(imgHeight / imgWidth * winWidth);
+        imgWidth = winWidth;
+      } else if (imgHeight > winHeight) {
+        imgWidth = Math.round(imgWidth / imgHeight * winHeight);
+        imgHeight = winHeight;
+      }
+
     }
 
     this.modalEl.style.width = imgWidth + 'px';
